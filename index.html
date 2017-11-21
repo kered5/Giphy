@@ -39,7 +39,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
       // Initial array of bands
-      var bands = ["Joy Division", "New Order", "Bauhaus", "Sex Pistols", "Simply Red", "Human League", "Ultravox", "Simple Minds", "The Cure","Siouxsie and the Banshees", "Dire Straits"];
+      var bands = ["Joy Division", "New Order", "Bauhaus", "Sex Pistols", "Simply Red", "Human League", "Ultravox", "Simple Minds", "The Cure","Siouxsie and the Banshees", "Dire Straits", "Echo and the Bunnymen", "Thompson Twins", "Kraftwerk", "U2", "The Smiths"];
 
 var results=[];
     // $(".gif").on("click", function() {
@@ -63,16 +63,16 @@ console.log(results[0]);
             var bandImage = $("<img>");
             // Setting the src attribute of the image to a property pulled off the result item
             bandImage.attr("src", results[parseInt(thisID)].images.fixed_height.url);
-            bandImage.addClass("gif");
+            bandDiv.addClass("gif");
             bandDiv.attr("id", thisID);
-            bandImage.attr("data-state", "still");
+            bandDiv.attr("data-state", "animated");
             // Appending the paragraph and image tag to the bandDiv
             bandDiv.append(p);
             bandDiv.append(bandImage);
-
-
-            // Prependng the bandDiv to the HTML page in the "#gifs-appear-here" div
-            $("#divid+thisID").after(bandDiv);
+            console.log(bandDiv);
+            // $("#bands-view").empty();
+            // Prependng the bandDiv to the HTML page in the "#bands-view" div
+            $("#bands-view").before(bandDiv);
 
 
     });
@@ -115,15 +115,15 @@ console.log(results[0]);
             var bandImage = $("<img>");
             // Setting the src attribute of the image to a property pulled off the result item
             bandImage.attr("src", results[i].images.fixed_height_still.url);
-            bandImage.addClass("gif");
-            bandImage.attr("id", i)
-            bandImage.attr("data-state", "still")
+            bandDiv.addClass("gif");
+            bandDiv.attr("id", i);
+            bandDiv.attr("data-state", "still")
             // Appending the paragraph and image tag to the bandDiv
             bandDiv.append(p);
             bandDiv.append(bandImage);
-            bandDiv.attr("id", "divid"+i);
+            // bandDiv.attr("id", "divid"+i);
 
-
+            console.log(bandDiv);
             $("#bands-view").empty();
             // Prependng the bandDiv to the HTML page in the "#gifs-appear-here" div
             $("#bands-view").after(bandDiv);
