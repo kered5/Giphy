@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>80s bands</title>
+  <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>80s bands Search</h1>
+
+
+    <!-- Rendered Buttons will get Dumped Here  -->
+    <div id="buttons-view"></div>
+
+
+
+    <form id="band-form">
+      <label for="band-input">Add a band</label>
+      <input type="text" id="band-input"><br>
+
+      <!-- Button triggers new band to be added -->
+      <input id="add-band" type="submit" value="Add a band">
+    </form>
+
+           <!-- bands will Get Dumped Dere -->
+    <div id="bands-view"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      // Initial array of bands
+      var bands = ["Joy Division", "New Order", "Bauhaus", "Sex Pistols", "Simply Red", "Human League", "Ultravox", "Simple Minds", "The Cure","Siouxsie and the Banshees", "Dire Straits"];
+
+var results=[];
+    // $(".gif").on("click", function() {
+      $(document).on("click", ".gif", function(){
+
+console.log("yay");
+console.log(this);
+var thisID = $(this).attr("id");
+var thisState = $(this).attr("data-state");
+console.log(thisID);
+console.log(thisState);
+console.log(parseInt(thisID));
+console.log(results[parseInt(thisID)]);
+console.log(results[0]);
+            var bandDiv = $("<div>");
+
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: " + results[parseInt(thisID)].rating);
+
+            // Creating and storing an image tag
+            var bandImage = $("<img>");
+            // Setting the src attribute of the image to a property pulled off the result item
+            bandImage.attr("src", results[parseInt(thisID)].images.fixed_height.url);
+            bandImage.addClass("gif");
+            bandDiv.attr("id", thisID);
+            bandImage.attr("data-state", "still");
+            // Appending the paragraph and image tag to the bandDiv
+            bandDiv.append(p);
+            bandDiv.append(bandImage);
+
+
+            // Prependng the bandDiv to the HTML page in the "#gifs-appear-here" div
+            $("#divid+thisID").after(bandDiv);
+
+
+    });
+
+
+      // displaybandInfo function re-renders the HTML to display the appropriate content
+      function displaybandInfo() {
+
+        var band = $(this).attr("data-name");
+
+
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        band + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+        // Creating an AJAX call for the specific band button being clicked
+      $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+        // After data comes back from the request
+        .done(function(response) {
+          console.log(queryURL);
+
+          console.log(response);
+          // storing the data from the AJAX request in the results variable
+           results = response.data;
+
+
+
+          // Looping through each result item
+          for (var i = 0; i < results.length; i++) {
+
+            // Creating and storing a div tag
+            var bandDiv = $("<div>");
+
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: " + results[i].rating);
+
+            // Creating and storing an image tag
+            var bandImage = $("<img>");
+            // Setting the src attribute of the image to a property pulled off the result item
+            bandImage.attr("src", results[i].images.fixed_height_still.url);
+            bandImage.addClass("gif");
+            bandImage.attr("id", i)
+            bandImage.attr("data-state", "still")
+            // Appending the paragraph and image tag to the bandDiv
+            bandDiv.append(p);
+            bandDiv.append(bandImage);
+            bandDiv.attr("id", "divid"+i);
+
+
+            $("#bands-view").empty();
+            // Prependng the bandDiv to the HTML page in the "#gifs-appear-here" div
+            $("#bands-view").after(bandDiv);
+          }
+        });
+
+      }
+
+      // Function for displaying band data
+      function renderButtons() {
+
+        // Deleting the bands prior to adding new bands
+        // (this is necessary otherwise you will have repeat buttons)
+        $("#buttons-view").empty();
+
+        // Looping through the array of bands
+        for (var i = 0; i < bands.length; i++) {
+
+          // Then dynamicaly generating buttons for each band in the array
+          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+          var a = $("<button>");
+          // Adding a class of band to our button
+          a.addClass("band");
+          // Adding a data-attribute
+          a.attr("data-name", bands[i]);
+          // Providing the initial button text
+          a.text(bands[i]);
+          // Adding the button to the buttons-view div
+          $("#buttons-view").append(a);
+        }
+      }
+
+      // This function handles events where a band button is clicked
+      $("#add-band").on("click", function(event) {
+        event.preventDefault();
+        // This line grabs the input from the textbox
+        var band = $("#band-input").val().trim();
+
+        // Adding band from the textbox to our array
+        bands.push(band);
+
+        // Calling renderButtons which handles the processing of our band array
+        renderButtons();
+      });
+
+
+
+      // Adding a click event listener to all elements with a class of "band"
+      $(document).on("click", ".band", displaybandInfo);
+
+      // Calling the renderButtons function to display the intial buttons
+      renderButtons();
+    </script>
+  </div>
+</body>
+
+</html>
