@@ -11,6 +11,9 @@
     input {
       margin: 10px;
     }
+    .gifdiv{
+      display:inline-block;
+    }
   </style>
 </head>
 
@@ -42,37 +45,21 @@
       var bands = ["Joy Division", "New Order", "Bauhaus", "Sex Pistols", "Simply Red", "Human League", "Ultravox", "Simple Minds", "The Cure","Siouxsie and the Banshees", "Dire Straits", "Echo and the Bunnymen", "Thompson Twins", "Kraftwerk", "U2", "The Smiths"];
 
 var results=[];
-    // $(".gif").on("click", function() {
+
+    //Listener for when a gif is clicked. We then flip the state to animate/still
       $(document).on("click", ".gif", function(){
+                var state = $(this).attr("data-state");
+      // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+      // Then, set the image's data-state to animate
+      // Else set src to the data-still value
 
-console.log("yay");
-console.log(this);
-var thisID = $(this).attr("id");
-var thisState = $(this).attr("data-state");
-console.log(thisID);
-console.log(thisState);
-console.log(parseInt(thisID));
-console.log(results[parseInt(thisID)]);
-console.log(results[0]);
-            var bandDiv = $("<div>");
-
-            // Creating a paragraph tag with the result item's rating
-            var p = $("<p>").text("Rating: " + results[parseInt(thisID)].rating);
-
-            // Creating and storing an image tag
-            var bandImage = $("<img>");
-            // Setting the src attribute of the image to a property pulled off the result item
-            bandImage.attr("src", results[parseInt(thisID)].images.fixed_height.url);
-            bandDiv.addClass("gif");
-            bandDiv.attr("id", thisID);
-            bandDiv.attr("data-state", "animated");
-            // Appending the paragraph and image tag to the bandDiv
-            bandDiv.append(p);
-            bandDiv.append(bandImage);
-            console.log(bandDiv);
-            // $("#bands-view").empty();
-            // Prependng the bandDiv to the HTML page in the "#bands-view" div
-            $("#bands-view").before(bandDiv);
+              if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
 
 
     });
@@ -95,7 +82,7 @@ console.log(results[0]);
         // After data comes back from the request
         .done(function(response) {
           console.log(queryURL);
-
+$("#bands-view").html("");
           console.log(response);
           // storing the data from the AJAX request in the results variable
            results = response.data;
@@ -115,18 +102,23 @@ console.log(results[0]);
             var bandImage = $("<img>");
             // Setting the src attribute of the image to a property pulled off the result item
             bandImage.attr("src", results[i].images.fixed_height_still.url);
-            bandDiv.addClass("gif");
-            bandDiv.attr("id", i);
-            bandDiv.attr("data-state", "still")
+            //Save both the animated a still images
+            bandImage.attr("data-still", results[i].images.fixed_height_still.url);
+            bandImage.attr("data-animate", results[i].images.fixed_height.url);
+            //Add gif class to the image
+            bandImage.addClass("gif");
+            //Add gifdiv class to the containing div
+            bandDiv.addClass("gifdiv");
+            //Initialize data-state at still
+            bandImage.attr("data-state", "still")
             // Appending the paragraph and image tag to the bandDiv
             bandDiv.append(p);
             bandDiv.append(bandImage);
             // bandDiv.attr("id", "divid"+i);
 
             console.log(bandDiv);
-            $("#bands-view").empty();
-            // Prependng the bandDiv to the HTML page in the "#gifs-appear-here" div
-            $("#bands-view").after(bandDiv);
+            // Appending the bandDiv to the HTML page in the "#band-view" div
+            $("#bands-view").append(bandDiv);
           }
         });
 
@@ -173,6 +165,7 @@ console.log(results[0]);
 
       // Adding a click event listener to all elements with a class of "band"
       $(document).on("click", ".band", displaybandInfo);
+
 
       // Calling the renderButtons function to display the intial buttons
       renderButtons();
